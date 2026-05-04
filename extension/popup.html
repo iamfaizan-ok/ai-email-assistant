@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { width: 300px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 16px; background-color: #0f172a; color: white; }
+    h2 { margin-top: 0; color: #6366f1; font-size: 18px; }
+    input { width: 100%; padding: 8px; margin-bottom: 12px; box-sizing: border-box; border-radius: 4px; border: 1px solid #334155; background: #1e293b; color: white;}
+    button { width: 100%; padding: 10px; background: #6366f1; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-bottom: 8px;}
+    button:hover { background: #4f46e5; }
+    #status { margin-top: 12px; font-size: 13px; color: #ef4444; }
+    .hidden { display: none; }
+    #logged-in-view { text-align: center; }
+    .success { color: #10b981; }
+  </style>
+</head>
+<body>
+  <h2>AI Email Assistant</h2>
+  
+  <div id="login-view">
+    <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">Log in to link your extension with your account.</p>
+    <input type="email" id="email" placeholder="Email Address">
+    <input type="password" id="password" placeholder="Password">
+    <button id="login-btn">Log In</button>
+  </div>
+
+  <div id="logged-in-view" class="hidden">
+    <p class="success">Connected securely!</p>
+    <button id="auth-gmail-btn">Authorize Gmail Access</button>
+    <button id="check-now-btn" style="background: #334155;">Check Emails Now</button>
+    <button id="logout-btn" style="background: transparent; color: #ef4444; border: 1px solid #ef4444;">Logout</button>
+  </div>
+
+  <div id="status"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

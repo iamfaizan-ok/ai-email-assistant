@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Email Assistant - Stay Organized</title>
+    <meta name="description" content="AI-powered email assistant to categorize important job-related emails." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <div id="app">
+      <!-- Navbar -->
+      <nav class="navbar">
+        <div class="logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          AI Email Assistant
+        </div>
+        <div class="nav-links">
+          <button id="nav-login-btn" class="btn-text">Log in</button>
+          <button id="nav-signup-btn" class="btn-primary">Sign up</button>
+          <button id="nav-logout-btn" class="btn-text hidden">Log out</button>
+          <button id="nav-dashboard-btn" class="btn-primary hidden">Dashboard</button>
+        </div>
+      </nav>
+
+      <!-- Sections -->
+      <main id="main-content">
+        <!-- Landing Page -->
+        <section id="landing-page" class="view-section active">
+          <div class="hero">
+            <h1>Never Miss an <span class="highlight">Important Job Offer</span> Again</h1>
+            <p>Our AI analyzes your incoming emails in the background and instantly notifies you of job-related opportunities.</p>
+            <div class="hero-actions">
+              <a href="/extension.zip" download class="btn-large btn-glow">Add to Chrome Extension</a>
+            </div>
+            <div class="hero-image-placeholder">
+               <div class="mockup-window">
+                  <div class="mockup-header">
+                     <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                  </div>
+                  <div class="mockup-body">
+                     <div class="notification-preview">
+                        <div class="notif-icon">🌟</div>
+                        <div class="notif-content">
+                           <strong>Important Job Opportunity</strong>
+                           <p>Interview Invitation - Software Engineer at Google</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Login Page -->
+        <section id="login-page" class="view-section">
+          <div class="auth-container">
+            <h2>Welcome Back</h2>
+            <p>Log in to manage your AI email assistant</p>
+            <form id="login-form">
+              <div class="form-group">
+                <label for="login-email">Email Address</label>
+                <input type="email" id="login-email" required placeholder="you@gmail.com">
+              </div>
+              <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" required placeholder="••••••••">
+              </div>
+              <p class="error-msg" id="login-error"></p>
+              <button type="submit" class="btn-primary btn-full">Log in</button>
+            </form>
+            <p class="auth-switch">Don't have an account? <a href="#" id="switch-to-signup">Sign up</a></p>
+          </div>
+        </section>
+
+        <!-- Signup Page -->
+        <section id="signup-page" class="view-section">
+          <div class="auth-container">
+            <h2>Create Account</h2>
+            <p>Get started with your AI email assistant</p>
+            <form id="signup-form">
+              <div class="form-group">
+                <label for="signup-name">Full Name</label>
+                <input type="text" id="signup-name" required placeholder="John Doe">
+              </div>
+              <div class="form-group">
+                <label for="signup-email">Gmail Address</label>
+                <input type="email" id="signup-email" required placeholder="you@gmail.com">
+              </div>
+              <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" required placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label for="signup-confirm-password">Confirm Password</label>
+                <input type="password" id="signup-confirm-password" required placeholder="••••••••">
+              </div>
+              <p class="error-msg" id="signup-error"></p>
+              <button type="submit" class="btn-primary btn-full">Sign up</button>
+            </form>
+            <p class="auth-switch">Already have an account? <a href="#" id="switch-to-login">Log in</a></p>
+          </div>
+        </section>
+
+        <!-- Dashboard Page -->
+        <section id="dashboard-page" class="view-section">
+          <div class="dashboard-header">
+            <h2>Your Important Emails</h2>
+            <button id="refresh-emails" class="btn-outline">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+              Refresh
+            </button>
+          </div>
+          <div id="emails-list" class="emails-grid">
+            <!-- Emails will be populated here -->
+          </div>
+        </section>
+
+      </main>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
