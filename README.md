@@ -47,11 +47,24 @@ npm run dev
 ```
 Navigate to `http://localhost:5173/` in your browser.
 
-### 3. Install the Extension
-1. Open Chrome and navigate to `chrome://extensions/`.
-2. Enable **Developer mode** in the top right corner.
-3. Click **Load unpacked** and select the `/extension` directory from this repository.
-4. *Note: Ensure you update the `client_id` in `extension/manifest.json` with your Google Cloud Console Client ID to enable Gmail OAuth.*
+### 3. Install the Extension (Recommended Approach)
+
+> [!WARNING]
+> **Important Note about Download Managers (like IDM)**
+> If you try to download the extension as a ZIP file, tools like Internet Download Manager (IDM) may intercept the download and show a "create account / login" popup, interrupting the process.
+
+**To avoid IDM interference and ensure a fast, standard workflow:**
+
+1. Open Chrome
+2. Go to: `chrome://extensions/`
+3. Turn ON **Developer Mode**
+4. Click on **Load Unpacked**
+5. Select the `/extension` folder from this project directory.
+
+> [!TIP]
+> This "Load Unpacked" method is the standard professional workflow. It allows you to make changes, refresh, and see results immediately without constantly re-downloading ZIP files!
+
+*Note: Ensure you update the `client_id` in `extension/manifest.json` with your Google Cloud Console Client ID to enable Gmail OAuth.*
 
 ## 🔒 Security
 - **No Plaintext Passwords**: Uses secure Django hashing.

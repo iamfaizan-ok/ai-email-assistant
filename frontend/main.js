@@ -10,31 +10,18 @@ let state = {
 // DOM Elements
 const els = {
   navLoginBtn: document.getElementById('nav-login-btn'),
-  navSignupBtn: document.getElementById('nav-signup-btn'),
   navLogoutBtn: document.getElementById('nav-logout-btn'),
   navDashboardBtn: document.getElementById('nav-dashboard-btn'),
   
   views: {
     landing: document.getElementById('landing-page'),
-    login: document.getElementById('login-page'),
-    signup: document.getElementById('signup-page'),
+    auth: document.getElementById('auth-page'),
     dashboard: document.getElementById('dashboard-page')
   },
   
-  forms: {
-    login: document.getElementById('login-form'),
-    signup: document.getElementById('signup-form')
-  },
-  
-  errors: {
-    login: document.getElementById('login-error'),
-    signup: document.getElementById('signup-error')
-  },
-  
-  switches: {
-    toSignup: document.getElementById('switch-to-signup'),
-    toLogin: document.getElementById('switch-to-login')
-  },
+  heroActions: document.getElementById('hero-actions'),
+  heroAuthPrompt: document.getElementById('hero-auth-prompt'),
+  authError: document.getElementById('auth-error'),
   
   dashboard: {
     emailsList: document.getElementById('emails-list'),
@@ -56,24 +43,26 @@ function navigate(viewName) {
 function updateNav() {
   if (state.token) {
     els.navLoginBtn.classList.add('hidden');
-    els.navSignupBtn.classList.add('hidden');
     els.navLogoutBtn.classList.remove('hidden');
     els.navDashboardBtn.classList.remove('hidden');
+    els.heroActions.style.display = 'block';
+    els.heroAuthPrompt.style.display = 'none';
   } else {
     els.navLoginBtn.classList.remove('hidden');
-    els.navSignupBtn.classList.remove('hidden');
     els.navLogoutBtn.classList.add('hidden');
     els.navDashboardBtn.classList.add('hidden');
+    els.heroActions.style.display = 'none';
+    els.heroAuthPrompt.style.display = 'block';
   }
 }
 
-// Auth API Calls
-async function login(email, password) {
+// Google Auth Callback
+window.handleGoogleLogin = async function(response) {
   try {
-    const res = await fetch(`${API_BASE}/users/login/`, {
+    const res = await fetch(`${API_BASE}/users/google-login/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ id_token: response.credential })
     });
     const data = await res.json();
     
@@ -81,43 +70,15 @@ async function login(email, password) {
       state.token = data.access;
       localStorage.setItem('access_token', data.access);
       localStorage.setItem('refresh_token', data.refresh);
-      els.errors.login.innerText = '';
+      els.authError.innerText = '';
       navigate('dashboard');
     } else {
-      els.errors.login.innerText = data.detail || 'Login failed. Check your credentials.';
+      els.authError.innerText = data.error || 'Google login failed.';
     }
   } catch (err) {
-    els.errors.login.innerText = 'Network error. Try again later.';
+    els.authError.innerText = 'Network error. Try again later.';
   }
-}
-
-async function signup(name, email, password, confirmPassword) {
-  if (password !== confirmPassword) {
-    els.errors.signup.innerText = 'Passwords do not match.';
-    return;
-  }
-  
-  try {
-    const res = await fetch(`${API_BASE}/users/register/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password, confirm_password: confirmPassword })
-    });
-    const data = await res.json();
-    
-    if (res.ok) {
-      state.token = data.access;
-      localStorage.setItem('access_token', data.access);
-      localStorage.setItem('refresh_token', data.refresh);
-      els.errors.signup.innerText = '';
-      navigate('dashboard');
-    } else {
-      els.errors.signup.innerText = JSON.stringify(data);
-    }
-  } catch (err) {
-    els.errors.signup.innerText = 'Network error. Try again later.';
-  }
-}
+};
 
 function logout() {
   state.token = null;
@@ -169,30 +130,10 @@ function renderEmails() {
 }
 
 // Event Listeners
-els.navLoginBtn.addEventListener('click', () => navigate('login'));
-els.navSignupBtn.addEventListener('click', () => navigate('signup'));
+els.navLoginBtn.addEventListener('click', () => navigate('auth'));
 els.navLogoutBtn.addEventListener('click', () => logout());
 els.navDashboardBtn.addEventListener('click', () => navigate('dashboard'));
 document.querySelector('.logo').addEventListener('click', () => navigate(state.token ? 'dashboard' : 'landing'));
-
-els.switches.toSignup.addEventListener('click', (e) => { e.preventDefault(); navigate('signup'); });
-els.switches.toLogin.addEventListener('click', (e) => { e.preventDefault(); navigate('login'); });
-
-els.forms.login.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const email = document.getElementById('login-email').value;
-  const pass = document.getElementById('login-password').value;
-  login(email, pass);
-});
-
-els.forms.signup.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const name = document.getElementById('signup-name').value;
-  const email = document.getElementById('signup-email').value;
-  const pass = document.getElementById('signup-password').value;
-  const confirm = document.getElementById('signup-confirm-password').value;
-  signup(name, email, pass, confirm);
-});
 
 els.dashboard.refreshBtn.addEventListener('click', fetchEmails);
 

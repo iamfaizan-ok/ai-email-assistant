@@ -12,32 +12,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     loggedInView.classList.remove('hidden');
   }
 
-  // Login
-  document.getElementById('login-btn').addEventListener('click', async () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+  // Connect & Authorize
+  document.getElementById('auth-gmail-btn').addEventListener('click', () => {
+    statusEl.innerText = 'Authorizing...';
+    statusEl.style.color = '#94a3b8';
     
-    statusEl.innerText = 'Logging in...';
-    
-    try {
-      const res = await fetch(`${API_BASE}/users/login/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-      
-      if (res.ok) {
-        await chrome.storage.local.set({ access_token: data.access });
-        statusEl.innerText = '';
-        loginView.classList.add('hidden');
-        loggedInView.classList.remove('hidden');
-      } else {
-        statusEl.innerText = data.detail || 'Login failed';
+    chrome.identity.getAuthToken({ interactive: true }, async function(token) {
+      if (chrome.runtime.lastError) {
+        statusEl.innerText = chrome.runtime.lastError.message;
+        statusEl.style.color = '#ef4444';
+        return;
       }
-    } catch (err) {
-      statusEl.innerText = 'Network error. Ensure backend is running.';
-    }
+      
+      statusEl.innerText = 'Linking account...';
+      try {
+        const res = await fetch(`${API_BASE}/users/google-login/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ access_token: token })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          await chrome.storage.local.set({ access_token: data.access });
+          statusEl.innerText = '';
+          loginView.classList.add('hidden');
+          loggedInView.classList.remove('hidden');
+        } else {
+          statusEl.innerText = data.error || 'Failed to link account';
+          statusEl.style.color = '#ef4444';
+        }
+      } catch (err) {
+        statusEl.innerText = 'Network error. Ensure backend is running.';
+        statusEl.style.color = '#ef4444';
+      }
+    });
   });
 
   // Logout
@@ -46,18 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     loginView.classList.remove('hidden');
     loggedInView.classList.add('hidden');
     statusEl.innerText = '';
-  });
-
-  // Authorize Gmail
-  document.getElementById('auth-gmail-btn').addEventListener('click', () => {
-    chrome.identity.getAuthToken({ interactive: true }, function(token) {
-      if (chrome.runtime.lastError) {
-        statusEl.innerText = chrome.runtime.lastError.message;
-      } else {
-        statusEl.innerText = 'Gmail Authorized!';
-        statusEl.style.color = '#10b981';
-      }
-    });
   });
 
   // Check Emails Now
