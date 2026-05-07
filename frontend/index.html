@@ -97,6 +97,21 @@
         <div id="emails-list" class="emails-grid">
           <!-- Emails will be populated here -->
         </div>
+
+        <!-- Chat with Inbox UI -->
+        <div class="chat-inbox-container" style="margin-top: 3rem; background: var(--bg-card); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color);">
+          <h3 style="margin-bottom: 1rem; color: var(--text-primary);">💬 Chat with your Inbox (AI)</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Ask Gemini any question about your job emails. It will read your inbox and answer!</p>
+          
+          <div id="chat-history" style="max-height: 300px; overflow-y: auto; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+            <!-- Chat messages will appear here -->
+          </div>
+          
+          <div style="display: flex; gap: 1rem;">
+            <input type="text" id="chat-input" placeholder="e.g. Did I get any emails from Google?" style="flex: 1; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-dark); color: white;">
+            <button id="send-chat-btn" class="btn-primary">Ask AI</button>
+          </div>
+        </div>
       </section>
 
     </main>

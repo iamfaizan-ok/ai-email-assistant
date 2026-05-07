@@ -137,6 +137,84 @@ document.querySelector('.logo').addEventListener('click', () => navigate(state.t
 
 els.dashboard.refreshBtn.addEventListener('click', fetchEmails);
 
+// Chat Logic
+const chatInput = document.getElementById('chat-input');
+const chatBtn = document.getElementById('send-chat-btn');
+const chatHistory = document.getElementById('chat-history');
+
+function appendMessage(text, isUser) {
+  const msgDiv = document.createElement('div');
+  msgDiv.style.padding = '1rem';
+  msgDiv.style.borderRadius = '8px';
+  msgDiv.style.maxWidth = '80%';
+  
+  if (isUser) {
+    msgDiv.style.background = 'var(--primary-color)';
+    msgDiv.style.color = 'white';
+    msgDiv.style.alignSelf = 'flex-end';
+    msgDiv.innerText = text;
+  } else {
+    msgDiv.style.background = 'var(--bg-dark)';
+    msgDiv.style.color = 'var(--text-primary)';
+    msgDiv.style.alignSelf = 'flex-start';
+    msgDiv.innerText = text;
+  }
+  
+  chatHistory.appendChild(msgDiv);
+  chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
+async function sendChatMessage() {
+  const query = chatInput.value.trim();
+  if (!query) return;
+  
+  appendMessage(query, true);
+  chatInput.value = '';
+  
+  // Add loading placeholder
+  const loadingId = 'loading-' + Date.now();
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = loadingId;
+  loadingDiv.style.padding = '1rem';
+  loadingDiv.style.borderRadius = '8px';
+  loadingDiv.style.maxWidth = '80%';
+  loadingDiv.style.background = 'var(--bg-dark)';
+  loadingDiv.style.color = 'var(--text-muted)';
+  loadingDiv.style.alignSelf = 'flex-start';
+  loadingDiv.innerText = 'Thinking...';
+  chatHistory.appendChild(loadingDiv);
+  chatHistory.scrollTop = chatHistory.scrollHeight;
+  
+  try {
+    const res = await fetch(`${API_BASE}/emails/chat/`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${state.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ query })
+    });
+    
+    document.getElementById(loadingId).remove();
+    
+    if (res.status === 401) {
+      logout();
+      return;
+    }
+    
+    const data = await res.json();
+    appendMessage(data.answer || 'No response received.', false);
+  } catch (err) {
+    document.getElementById(loadingId).remove();
+    appendMessage('Error: Could not reach the AI server.', false);
+  }
+}
+
+chatBtn.addEventListener('click', sendChatMessage);
+chatInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') sendChatMessage();
+});
+
 // Init
 function init() {
   updateNav();
